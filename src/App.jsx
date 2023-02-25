@@ -7,23 +7,43 @@ export default function App({ peer }) {
     newConns.push(conn);
     setConns(newConns);
   }
-  useEffect(() => {
-    peer.on('connection', (conn) => {
-      pushConn(conn);
-      conn.on('data', (data) => console.log(data));
-    })
-  }, []);
+
+  const [ messages, setMessages ] = useState([]);
+  const pushMessage = (msg) => {
+    const newMessages = [...messages];
+    newMessages.push(msg);
+    setMessages(newMessages);
+  }
 
   const onConnect = (ev) => {
     ev.preventDefault();
     const peerId = ev.target.querySelector('input[name="peerId"]').value;
-    console.log('connect to:', peerId);
     const conn = peer.connect(peerId);
     conn.on('open', () => {
-      console.log('connected');
       pushConn(conn);
+      conn.on('data', (data) => {
+        pushMessage(data.text);
+      });
     })
   }
+
+  const onSend = (ev) => {
+    ev.preventDefault();
+    const text = ev.target.querySelector('input[name="text"]').value;
+    pushMessage(text);
+    for (let conn of conns) {
+      conn.send({text});
+    }
+  }
+
+  useEffect(() => {
+    peer.on('connection', (conn) => {
+      pushConn(conn);
+      conn.on('data', (data) => {
+        pushMessage(data.text);
+      });
+    })
+  }, []);
 
   return (
     <div className="App">
@@ -34,6 +54,13 @@ export default function App({ peer }) {
           <input type="text" name="peerId" />
         </label>
         <input type="submit" value="Connect" />
+      </form>
+
+      {messages.map(msg => <p>> {msg}</p>)}
+
+      <form onSubmit={onSend}>
+        <input type="text" name="text" />
+        <input type="submit" value="Send Message" />
       </form>
     </div>
   );
