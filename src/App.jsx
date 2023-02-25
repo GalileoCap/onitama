@@ -1,7 +1,7 @@
-export default function App() {
+export default function App({ peer }) {
   return (
     <div className="App">
-      App
+      {peer.id}
     </div>
   );
 }
