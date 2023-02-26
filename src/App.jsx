@@ -1,23 +1,30 @@
 import React, { useState, useEffect } from 'react';
 
+function useForceUpdate() {
+  const [ val, setVal ] = useState(0);
+  return () => setVal(val => val + 1);
+}
+
 export default function App({ peer }) {
+  const forceUpdate = useForceUpdate();
+
   const [ conns, setConns ] = useState([]);
   const pushConn = (conn) => {
-    const newConns = [...conns];
-    newConns.push(conn);
-    setConns(newConns);
+    conns.push(conn); //setConns([...conns, conn]);
+    forceUpdate();
   }
 
   const [ messages, setMessages ] = useState([]);
   const pushMessage = (msg) => {
-    const newMessages = [...messages];
-    newMessages.push(msg);
-    setMessages(newMessages);
+    messages.push(msg); //setMessages([...messages, msg]);
+    forceUpdate();
   }
 
   const onConnect = (ev) => {
     ev.preventDefault();
-    const peerId = ev.target.querySelector('input[name="peerId"]').value;
+    const peerIdComponent = ev.target.querySelector('input[name="peerId"]');
+    const peerId = peerIdComponent.value; peerIdComponent.value = '';
+
     const conn = peer.connect(peerId);
     conn.on('open', () => {
       pushConn(conn);
@@ -29,7 +36,9 @@ export default function App({ peer }) {
 
   const onSend = (ev) => {
     ev.preventDefault();
-    const text = ev.target.querySelector('input[name="text"]').value;
+    const textComponent = ev.target.querySelector('input[name="text"]');
+    const text = textComponent.value; textComponent.value = '';
+
     pushMessage(text);
     for (let conn of conns) {
       conn.send({text});
@@ -56,7 +65,7 @@ export default function App({ peer }) {
         <input type="submit" value="Connect" />
       </form>
 
-      {messages.map(msg => <p>> {msg}</p>)}
+      {messages.map((msg, i) => <p key={i}>> {msg}</p>)}
 
       <form onSubmit={onSend}>
         <input type="text" name="text" />
