@@ -8,15 +8,16 @@ function useForceUpdate() {
 export default function App({ peer }) {
   const forceUpdate = useForceUpdate();
 
-  const [ conns, setConns ] = useState([]);
-  const pushConn = (conn) => {
-    conns.push(conn); //setConns([...conns, conn]);
-    forceUpdate();
-  }
-
   const [ messages, setMessages ] = useState([]);
   const pushMessage = (msg) => {
     messages.push(msg); //setMessages([...messages, msg]);
+    forceUpdate();
+  }
+
+  const [ conns, setConns ] = useState([]);
+  const pushConn = (conn) => {
+    conns.push(conn); //setConns([...conns, conn]);
+    pushMessage(conn.peer + ' joined');
     forceUpdate();
   }
 
