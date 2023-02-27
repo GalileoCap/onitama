@@ -4,35 +4,28 @@ import store from './store';
 import { pushMsg } from './messagesSlice';
 import { forceUpdate } from './utils';
 
-export let Peer = null;
-export const Conns = [];
+export let Peer = undefined;
+export let Conn = undefined;
 
 export function initPeer() {
   Peer = new PeerJS();
-  Peer.on('connection', (conn) => pushConn(conn));
+  Peer.on('connection', (conn) => {
+    if (Conn === undefined) setConn(conn);
+    else conn.close();
+  });
   Peer.on('open', () => store.dispatch(forceUpdate('peer')));
 }
 
-export function connectTo(peerId, cb = () => {}) {
+export function connectTo(peerId) {
   const conn = Peer.connect(peerId);
-  conn.on('open', () => pushConn(conn, cb));
+  conn.on('open', () => setConn(conn));
 }
 
-export function send2Conns(data) {
-  Conns.forEach((conn) => conn.send(data));
-}
-
-export function pushConn(conn, cb = () => {}) {
-  Conns.push(conn);
-  conn.on('data', (data) => {
+export function setConn(conn) {
+  Conn = conn;
+  Conn.on('data', (data) => {
     switch (data.type) {
-    case 'peers':
-      for (let peerId of data.peers) {
-        if (peerId != Peer.id && (Conns.filter(conn => conn.peer === peerId).length === 0)) { // It's not me nor am I already connected to them
-          const conn = Peer.connect(peerId);
-          conn.on('open', () => pushConn(conn));
-        }
-      }
+    case 'init':
       break;
 
     case 'msg':
@@ -43,8 +36,10 @@ export function pushConn(conn, cb = () => {}) {
       console.log('default', data);
     }
   });
-  setTimeout(() => conn.send({type: 'peers', peers: Conns.map(conn => conn.peer)}), 0); //TODO: This tries to fix a race condition where the peer who connected hasn't set the callback (conn.on('data')) yet.
+  setTimeout(() => conn.send({
+    type: 'init',
+  }), 0); //TODO: This tries to fix a race condition where the peer who connected hasn't set the callback (conn.on('data')) yet.
 
   store.dispatch(pushMsg(conn.peer + ' joined'));
-  store.dispatch(forceUpdate('conns'));
+  store.dispatch(forceUpdate('conn'));
 }

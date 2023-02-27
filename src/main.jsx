@@ -4,13 +4,13 @@ import { Provider, useSelector } from 'react-redux';
 
 import store from './store';
 import { Peer, initPeer } from './peer';
-import { forceUpdate } from './utils';
+import { useForceUpdate } from './utils';
 
 import App from './App';
 import './index.css';
 
 function Main() {
-  const forceUpdatePeer = useSelector((state) => state.utils.forceUpdate['peer']);
+  useForceUpdate('peer');
   useEffect(() => {
     initPeer();
   }, []);
@@ -18,9 +18,9 @@ function Main() {
   return (
     <div>
       {
-        Peer !== null
-        ? <App />
-        : <></>
+        Peer === undefined
+        ? <></>
+        : <App />
       }
     </div>
   );

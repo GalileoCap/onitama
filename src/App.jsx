@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { pushMsg } from './messagesSlice';
-import { Peer, Conns, connectTo, send2Conns } from './peer';
+import { Peer, Conn, connectTo } from './peer';
+import { useForceUpdate } from './utils';
 
 function Connect() {
   const onConnect = (ev) => {
@@ -32,7 +33,7 @@ function Messages() {
     const text = textComponent.value || 'ping'; textComponent.value = '';
 
     dispatch(pushMsg(text));
-    send2Conns({type: 'msg', text});
+    Conn.send({type: 'msg', text});
   }
 
   return (
@@ -48,7 +49,7 @@ function Messages() {
 }
 
 export default function App() {
-  const forceUpdateConns = useSelector((state) => state.utils.forceUpdate['conns']);
+  useForceUpdate('conn');
 
   return (
     <div className="App">
@@ -56,7 +57,7 @@ export default function App() {
         {Peer.id}
       </div>
       {
-        Conns.length === 0
+        Conn === undefined
         ? <Connect />
         : <Messages />
       }

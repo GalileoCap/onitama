@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { useSelector } from 'react-redux';
 
 export const utils = createSlice({
   name: 'utils',
@@ -12,6 +13,10 @@ export const utils = createSlice({
     }
   },
 });
+
+export function useForceUpdate(key) {
+  return useSelector((state) => state.utils.forceUpdate[key]);
+}
 
 export const { forceUpdate } = utils.actions;
 export const utilsReducer = utils.reducer;
