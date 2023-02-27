@@ -1,6 +1,7 @@
 import { Peer as PeerJS } from 'peerjs';
 
 import store from './store';
+import { selectCell } from './gameSlice';
 import { pushMsg } from './messagesSlice';
 import { forceUpdate } from './utils';
 
@@ -26,6 +27,10 @@ export function setConn(conn) {
   Conn.on('data', (data) => {
     switch (data.type) {
     case 'init':
+      break;
+
+    case 'move':
+      store.dispatch(selectCell(data.cell));
       break;
 
     case 'msg':

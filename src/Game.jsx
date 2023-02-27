@@ -1,9 +1,16 @@
 import { useSelector, useDispatch } from 'react-redux';
-//import { pushMsg } from './messagesSlice';
+import { selectCell } from './gameSlice';
+import { Conn } from './peer';
 
 function BoardCell({ state, row, col }) {
+  const dispatch = useDispatch();
+  const onClick = (ev) => {
+    dispatch(selectCell({row, col}));
+    Conn.send({type: 'move', cell: {row, col}});
+  }
+
   return (
-    <td className="BoardCell">
+    <td className="BoardCell" onClick={onClick}>
       { state }
     </td>
   )
