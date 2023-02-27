@@ -1,6 +1,8 @@
 import { Peer as PeerJS } from 'peerjs';
+
 import store from './store';
 import { pushMsg } from './messagesSlice';
+import { forceUpdate } from './utils';
 
 export let Peer = null;
 export const Conns = [];
@@ -8,7 +10,7 @@ export const Conns = [];
 export function initPeer() {
   Peer = new PeerJS();
   Peer.on('connection', (conn) => pushConn(conn));
-  //Peer.on('open', cb);
+  Peer.on('open', () => store.dispatch(forceUpdate('peer')));
 }
 
 export function connectTo(peerId, cb = () => {}) {
@@ -44,5 +46,5 @@ export function pushConn(conn, cb = () => {}) {
   setTimeout(() => conn.send({type: 'peers', peers: Conns.map(conn => conn.peer)}), 0); //TODO: This tries to fix a race condition where the peer who connected hasn't set the callback (conn.on('data')) yet.
 
   store.dispatch(pushMsg(conn.peer + ' joined'));
-  cb();
+  store.dispatch(forceUpdate('conns'));
 }

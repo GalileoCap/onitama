@@ -48,6 +48,8 @@ function Messages() {
 }
 
 export default function App() {
+  const forceUpdateConns = useSelector((state) => state.utils.forceUpdate['conns']);
+
   return (
     <div className="App">
       <div onClick={() => navigator.clipboard.writeText(Peer.id)}>

@@ -1,19 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
-import { Provider } from 'react-redux';
+import { Provider, useSelector } from 'react-redux';
 
 import store from './store';
 import { Peer, initPeer } from './peer';
+import { forceUpdate } from './utils';
+
 import App from './App';
 import './index.css';
 
-function useForceUpdate() {
-  const [ val, setVal ] = useState(0);
-  return () => setVal(val => val + 1);
-}
-
 function Main() {
-  const forceUpdate = useForceUpdate();
+  const forceUpdatePeer = useSelector((state) => state.utils.forceUpdate['peer']);
   useEffect(() => {
     initPeer();
   }, []);
@@ -25,7 +22,6 @@ function Main() {
         ? <App />
         : <></>
       }
-      <button onClick={forceUpdate}>Update</button>
     </div>
   );
 }
