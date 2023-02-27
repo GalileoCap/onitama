@@ -93,7 +93,9 @@ export default function App({ peer }) {
 
   return (
     <div className="App">
-      {peer.id}
+      <div onClick={() => navigator.clipboard.writeText(peer.id)}>
+        {peer.id}
+      </div>
       {
         conns.length === 0
         ? <Connect peer={peer} pushConn={pushConn} />
