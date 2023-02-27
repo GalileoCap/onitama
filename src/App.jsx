@@ -30,7 +30,7 @@ function Messages({ conns, messages, pushMessage }) {
   const onSend = (ev) => {
     ev.preventDefault();
     const textComponent = ev.target.querySelector('input[name="text"]');
-    const text = textComponent.value; textComponent.value = '';
+    const text = textComponent.value || 'ping'; textComponent.value = '';
 
     pushMessage(text);
     for (let conn of conns) {
