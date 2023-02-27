@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux'
-import { decrement, increment } from './counterSlice'
+import { useSelector, useDispatch } from 'react-redux';
+import { pushMsg } from './messagesSlice';
 
 function useForceUpdate() {
   const [ val, setVal ] = useState(0);
   return () => setVal(val => val + 1);
 }
 
-function Connect({ peer, pushConn, pushMessage }) {
+function Connect({ peer, pushConn }) {
   const onConnect = (ev) => {
     ev.preventDefault();
     const peerIdComponent = ev.target.querySelector('input[name="peerId"]');
@@ -28,13 +28,16 @@ function Connect({ peer, pushConn, pushMessage }) {
   );
 }
 
-function Messages({ conns, messages, pushMessage }) {
+function Messages({ conns }) {
+  const messages = useSelector((state) => state.messages.value);
+  const dispatch = useDispatch();
+
   const onSend = (ev) => {
     ev.preventDefault();
     const textComponent = ev.target.querySelector('input[name="text"]');
     const text = textComponent.value || 'ping'; textComponent.value = '';
 
-    pushMessage(text);
+    dispatch(pushMsg(text));
     for (let conn of conns) {
       conn.send({type: 'msg', text});
     }
@@ -52,39 +55,9 @@ function Messages({ conns, messages, pushMessage }) {
   );
 }
 
-export function Counter() {
-  const count = useSelector((state) => state.counter.value)
-  const dispatch = useDispatch()
-
-  return (
-    <div>
-      <div>
-        <button
-          aria-label="Increment value"
-          onClick={() => dispatch(increment())}
-        >
-          Increment
-        </button>
-        <span>{count}</span>
-        <button
-          aria-label="Decrement value"
-          onClick={() => dispatch(decrement())}
-        >
-          Decrement
-        </button>
-      </div>
-    </div>
-  )
-}
-
 export default function App({ peer }) {
   const forceUpdate = useForceUpdate();
-
-  const [ messages, setMessages ] = useState([]);
-  const pushMessage = (msg) => {
-    messages.push(msg); //setMessages([...messages, msg]);
-    forceUpdate();
-  }
+  const dispatch = useDispatch();
 
   const [ conns, setConns ] = useState([]);
   const pushConn = (conn) => {
@@ -101,7 +74,7 @@ export default function App({ peer }) {
         break;
 
       case 'msg':
-        pushMessage(data.text);
+        dispatch(pushMsg(data.text));
         break;
 
       default:
@@ -110,7 +83,7 @@ export default function App({ peer }) {
     });
     setTimeout(() => conn.send({type: 'peers', peers: conns.map(conn => conn.peer)}), 0); //TODO: This tries to fix a race condition where the peer who connected hasn't set the callback (conn.on('data')) yet.
 
-    pushMessage(conn.peer + ' joined');
+    dispatch(pushMsg(conn.peer + ' joined'));
     forceUpdate();
   }
 
@@ -123,11 +96,9 @@ export default function App({ peer }) {
       {peer.id}
       {
         conns.length === 0
-        ? <Connect peer={peer} pushConn={pushConn} pushMessage={pushMessage} />
-        : <Messages messages={messages} conns={conns} pushMessage={pushMessage} />
+        ? <Connect peer={peer} pushConn={pushConn} />
+        : <Messages conns={conns} />
       }
-
-      <Counter />
     </div>
   );
 }
