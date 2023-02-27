@@ -2,6 +2,7 @@ import { Conn } from './peer';
 import { useForceUpdate } from './utils';
 
 import Connect from './Connect';
+import Game from './Game';
 import Messages from './Messages';
 
 export default function App() {
@@ -12,7 +13,10 @@ export default function App() {
       {
         Conn === undefined
         ? <Connect />
-        : <Messages />
+        : <>
+          <Game />
+          <Messages />
+        </>
       }
     </div>
   );
