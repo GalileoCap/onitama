@@ -1,21 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
-import { Peer } from 'peerjs';
 
 import store from './store';
+import { Peer, initPeer } from './peer';
 import App from './App';
 import './index.css';
 
+function useForceUpdate() {
+  const [ val, setVal ] = useState(0);
+  return () => setVal(val => val + 1);
+}
+
 function Main() {
-  const [peer, setPeer] = useState(null);
+  const forceUpdate = useForceUpdate();
   useEffect(() => {
-    const peer = new Peer();
-    peer.on('open', () => setPeer(peer));
+    initPeer();
   }, []);
 
-  if (peer === null) return <></>; //TODO: Show loading until peer has an id
-  else return <App peer={peer} />
+  return (
+    <div>
+      {
+        Peer !== null
+        ? <App />
+        : <></>
+      }
+      <button onClick={forceUpdate}>Update</button>
+    </div>
+  );
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(
