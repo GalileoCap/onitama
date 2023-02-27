@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux'
+import { decrement, increment } from './counterSlice'
 
 function useForceUpdate() {
   const [ val, setVal ] = useState(0);
@@ -48,6 +50,31 @@ function Messages({ conns, messages, pushMessage }) {
       </form>
     </div>
   );
+}
+
+export function Counter() {
+  const count = useSelector((state) => state.counter.value)
+  const dispatch = useDispatch()
+
+  return (
+    <div>
+      <div>
+        <button
+          aria-label="Increment value"
+          onClick={() => dispatch(increment())}
+        >
+          Increment
+        </button>
+        <span>{count}</span>
+        <button
+          aria-label="Decrement value"
+          onClick={() => dispatch(decrement())}
+        >
+          Decrement
+        </button>
+      </div>
+    </div>
+  )
 }
 
 export default function App({ peer }) {
@@ -100,6 +127,7 @@ export default function App({ peer }) {
         : <Messages messages={messages} conns={conns} pushMessage={pushMessage} />
       }
 
+      <Counter />
     </div>
   );
 }
