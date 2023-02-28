@@ -15,7 +15,10 @@ export const gameSlice = createSlice({
   reducers: {
     selectCell: (state, action) => {
       if (state.selectedCell === undefined) {
-        state.selectedCell = action.payload;
+        const { row, col } = action.payload;
+        if (state.board[row][col] !== 0)
+          state.selectedCell = action.payload;
+        //TODO: else reject
         return;
       } else if (state.selectedCell.row === action.payload.row && state.selectedCell.col === action.payload.col) {
         state.selectedCell = undefined;
@@ -25,8 +28,14 @@ export const gameSlice = createSlice({
       const { row: fromRow, col: fromCol } = state.selectedCell;
       const { row: toRow, col: toCol } = action.payload;
 
-      state.board[toRow][toCol] = state.board[fromRow][fromCol];
-      state.board[fromRow][fromCol] = 0;
+      const fromVal = state.board[fromRow][fromCol];
+      const toVal = state.board[toRow][toCol];
+
+      console.log(Math.floor((fromVal - 1) / 2), Math.floor((toVal - 1) / 2))
+      if (Math.floor((fromVal - 1) / 2) !== Math.floor((toVal - 1) / 2)) {
+        state.board[toRow][toCol] = fromVal;
+        state.board[fromRow][fromCol] = 0;
+      } //TODO: Else reject
       state.selectedCell = undefined;
     }
   },
