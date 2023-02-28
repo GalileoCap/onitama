@@ -1,12 +1,16 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { selectCell } from './gameSlice';
+import { selectCell, MINE } from './gameSlice';
 import { Conn } from './peer';
 
 function BoardCell({ state, row, col }) {
+  const turn = useSelector((state) => state.game.turn);
   const dispatch = useDispatch();
+
   const onClick = (ev) => {
-    dispatch(selectCell({row, col}));
-    Conn.send({type: 'move', cell: {row, col}});
+    if (turn === MINE) {
+      dispatch(selectCell({row, col}));
+      Conn.send({type: 'move', cell: {row, col}});
+    }
   }
 
   return (
@@ -33,9 +37,12 @@ function Board() {
 }
 
 export default function Game() {
+  const turn = useSelector((state) => state.game.turn);
+
   return (
     <div className="Game">
       <Board />
+      { turn === MINE ? 'Your turn' : 'Their turn' }
     </div>
   );
 }
