@@ -1,16 +1,30 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { selectCell, MINE } from './gameSlice';
+import { selectCell, selectMove, MINE } from './gameSlice';
 import { Conn } from './peer';
 
+function Move({ deltas, whose }) {
+  const dispatch = useDispatch();
+
+  const onClickMine = () => {
+    dispatch(selectMove(deltas));
+  }
+
+  const onClickTheirs = () => {
+    //TODO: Inspect
+  }
+
+  return (
+    <button onClick={whose === MINE ? onClickMine : onClickTheirs}>
+      Move
+    </button>
+  );
+}
+
 function BoardCell({ state, row, col }) {
-  const turn = useSelector((state) => state.game.turn);
   const dispatch = useDispatch();
 
   const onClick = (ev) => {
-    if (turn === MINE) {
-      dispatch(selectCell({row, col}));
-      Conn.send({type: 'move', cell: {row, col}});
-    }
+    dispatch(selectCell({row, col}));
   }
 
   return (
@@ -42,6 +56,7 @@ export default function Game() {
   return (
     <div className="Game">
       <Board />
+      <Move deltas={[{x: 1, y: 0}, {x: -1, y: 0}, {x: 0, y: 1}, {x: 0, y: -1}]} whose={MINE} />
       { turn === MINE ? 'Your turn' : 'Their turn' }
     </div>
   );

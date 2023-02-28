@@ -1,7 +1,7 @@
 import { Peer as PeerJS } from 'peerjs';
 
 import store from './store';
-import { setOrder, selectCell } from './gameSlice';
+import { setOrder, theirMove } from './gameSlice';
 import { pushMsg } from './messagesSlice';
 import { forceUpdate } from './utils';
 
@@ -35,7 +35,7 @@ export function setConn(conn) {
       break;
 
     case 'move':
-      store.dispatch(selectCell(data.cell));
+      store.dispatch(theirMove(data));
       break;
 
     case 'msg':
