@@ -2,9 +2,10 @@ import { createSlice } from '@reduxjs/toolkit';
 import { Conn } from './peer';
 
 export const MINE = 0; export const THEIRS = 1;
+export const PAWN = 0; export const KING = 1;
 
 function isMine(from, board) {
-  return board[from.row][from.col] !== 0; //TODO: Assing a side to each player
+  return board[from.row][from.col] !== null; //TODO: Assing a side to each player
 }
 
 function canMove(from, to, move, board) {
@@ -17,7 +18,7 @@ function transform({ row, col }) {
 
 function performMove(from, to, state) {
   state.board[to.row][to.col] = state.board[from.row][from.col];
-  state.board[from.row][from.col] = 0;
+  state.board[from.row][from.col] = null;
   state.turn = (state.turn + 1) % 2;
   state.cell = undefined;
   state.move = undefined;
@@ -30,11 +31,12 @@ export const gameSlice = createSlice({
     cell: undefined,
     move: undefined,
     board: [
-      [1, 1, 2, 1, 1],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [3, 3, 4, 3, 3],
+      [{piece: PAWN, team: THEIRS}, {piece: PAWN, team: THEIRS}, {piece: KING, team: THEIRS}, {piece: PAWN, team: THEIRS}, {piece: PAWN, team: THEIRS}],
+      [null, null, null, null, null],
+      [null, null, null, null, null],
+      [null, null, null, null, null],
+      [null, null, null, null, null],
+      [{piece: PAWN, team: MINE}, {piece: PAWN, team: MINE}, {piece: KING, team: MINE}, {piece: PAWN, team: MINE}, {piece: PAWN, team: MINE}],
     ],
   },
   reducers: {

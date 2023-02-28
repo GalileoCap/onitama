@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { selectCell, selectMove, MINE } from './gameSlice';
+import { selectCell, selectMove, MINE, KING } from './gameSlice';
 import { Conn } from './peer';
 
 function Move({ deltas, whose }) {
@@ -29,7 +29,7 @@ function BoardCell({ state, row, col }) {
 
   return (
     <td className="BoardCell" onClick={onClick}>
-      { state }
+      { state === null ? 0 : (2 * state.team + (state.piece === KING) + 1) }
     </td>
   )
 }
