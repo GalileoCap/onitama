@@ -1,9 +1,9 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { pushMsg } from './messagesSlice';
-import { Conn } from './peer';
+import { pushMsg } from './chatSlice';
+import { Conn } from '../peer';
 
-export default function Messages() {
-  const messages = useSelector((state) => state.messages.value);
+export default function Chat() {
+  const messages = useSelector((state) => state.chat.messages);
   const dispatch = useDispatch();
 
   const onSend = (ev) => {
@@ -16,7 +16,7 @@ export default function Messages() {
   }
 
   return (
-    <div className="Messages">
+    <div className="Chat">
       {messages.map((msg, i) => <p key={i}>> {msg}</p>)}
 
       <form onSubmit={onSend}>

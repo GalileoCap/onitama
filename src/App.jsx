@@ -3,7 +3,7 @@ import { useForceUpdate } from './utils';
 
 import Connect from './Connect';
 import Game from './Game/Game';
-import Messages from './Messages';
+import Chat from './Chat/Chat';
 
 export default function App() {
   useForceUpdate('conn');
@@ -15,7 +15,7 @@ export default function App() {
         ? <Connect />
         : <>
           <Game />
-          <Messages />
+          <Chat />
         </>
       }
     </div>

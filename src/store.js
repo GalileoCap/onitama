@@ -1,12 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import gameReducer from './Game/gameSlice';
-import messagesReducer from './messagesSlice';
+import chatReducer from './Chat/chatSlice';
 import { utilsReducer } from './utils';
 
 export default configureStore({
   reducer: {
     game: gameReducer,
-    messages: messagesReducer,
+    chat: chatReducer,
     utils: utilsReducer,
   },
 });

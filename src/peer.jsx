@@ -2,7 +2,7 @@ import { Peer as PeerJS } from 'peerjs';
 
 import store from './store';
 import { initGame, theirMove, MOVES } from './Game/gameSlice';
-import { pushMsg } from './messagesSlice';
+import { pushMsg } from './Chat/chatSlice';
 import { forceUpdate } from './utils';
 
 export let Peer = undefined;
