@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Conn } from './peer';
-import { transform } from './utils';
+import { Conn } from '../peer';
+import { transform } from '../utils';
 
 export const MINE = 0; export const THEIRS = 1;
 export const PAWN = 0; export const KING = 1;

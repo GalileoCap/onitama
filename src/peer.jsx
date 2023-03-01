@@ -1,7 +1,7 @@
 import { Peer as PeerJS } from 'peerjs';
 
 import store from './store';
-import { initGame, theirMove, MOVES } from './gameSlice';
+import { initGame, theirMove, MOVES } from './Game/gameSlice';
 import { pushMsg } from './messagesSlice';
 import { forceUpdate } from './utils';
 

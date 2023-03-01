@@ -1,9 +1,8 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { selectCell, selectMove, MINE, THEIRS, KING } from './gameSlice';
-import { Conn } from './peer';
-import { transform } from './utils';
+import { selectMove, MINE } from './gameSlice';
+import { transform } from '../utils';
 
-function Move({ move, whose, idx }) {
+export function Move({ move, whose, idx }) {
   const { name, deltas, pos } = move;
   const dispatch = useDispatch();
 
@@ -55,55 +54,10 @@ function Move({ move, whose, idx }) {
   );
 }
 
-function Moves({ moves, whose }) {
+export default function Moves({ moves, whose }) {
   return (
     <div className="Moves">
       { moves.map((move, i) => <Move move={move} whose={whose} idx={i} key={i} />) }
-    </div>
-  );
-}
-
-function BoardCell({ state, row, col }) {
-  const dispatch = useDispatch();
-
-  const onClick = (ev) => {
-    dispatch(selectCell({row, col}));
-  }
-
-  return (
-    <td className="BoardCell" onClick={onClick}>
-      { state === null ? 0 : (2 * state.team + (state.piece === KING) + 1) }
-    </td>
-  )
-}
-
-function Board() {
-  const board = useSelector((state) => state.game.board);
-
-  return (
-    <table className="Board">
-      <tbody>
-      { board.map((row, i) => (
-          <tr key={i}>
-            { row.map((cell, j) => <BoardCell state={cell} row={i} col={j} key={j}/>) }
-          </tr>
-        )) }
-      </tbody>
-    </table>
-  );
-}
-
-export default function Game() {
-  const turn = useSelector((state) => state.game.turn);
-  const moves = useSelector((state) => state.game.moves);
-
-  return (
-    <div className="Game">
-      <Moves moves={moves.theirs} whose={THEIRS} />
-      <Board />
-      <Moves moves={moves.mine} whose={MINE} />
-      <Move move={moves.middle} whose={turn} idx={2} />
-      { turn === MINE ? 'Your turn' : 'Their turn' }
     </div>
   );
 }
