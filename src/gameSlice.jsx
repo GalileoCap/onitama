@@ -4,7 +4,33 @@ import { transform } from './utils';
 
 export const MINE = 0; export const THEIRS = 1;
 export const PAWN = 0; export const KING = 1;
-const MOVE1 = {name: 'Move 1', deltas: [{x: 1, y: 0}, {x: -1, y: 0}, {x: 0, y: -1}, {x: -1, y: -1}], pos: {row: 2, col: 2}};
+export const MOVES = [
+  {
+    name: 'Goose',
+    deltas: [{x: -1, y: 0}, {x: -1, y: -1}, {x: 1, y: 0}, {x: 1, y: 1}], 
+    pos: {row: 2, col: 2}
+  },
+  {
+    name: 'Kirin',
+    deltas: [{x: 0, y: 2}, {x: -1, y: -2}, {x: 1, y: -2}], 
+    pos: {row: 2, col: 2}
+  },
+  {
+    name: 'Phoenix',
+    deltas: [{x: -2, y: 0}, {x: -1, y: -1}, {x: 1, y: -1}, {x: 2, y: 0}], 
+    pos: {row: 2, col: 2}
+  },
+  {
+    name: 'Sheep',
+    deltas: [{x: -1, y: -1}, {x: 0, y: 1}, {x: 1, y: 0}], 
+    pos: {row: 2, col: 2}
+  },
+  {
+    name: 'Ant',
+    deltas: [{x: -1, y: -1}, {x: 0, y: 1}, {x: 1, y: -1}], 
+    pos: {row: 2, col: 2}
+  },
+];
 
 function isMine(from, board) {
   const state = board[from.row][from.col];
@@ -56,9 +82,9 @@ export const gameSlice = createSlice({
     cell: undefined,
     moveIdx: undefined,
     moves: {
-      mine: [MOVE1, MOVE1],
-      theirs: [MOVE1, MOVE1],
-      middle: MOVE1,
+      mine: [MOVES[0], MOVES[1]],
+      theirs: [MOVES[2], MOVES[3]],
+      middle: MOVES[4],
     },
     board: [
       [{piece: PAWN, team: THEIRS}, {piece: PAWN, team: THEIRS}, {piece: KING, team: THEIRS}, {piece: PAWN, team: THEIRS}, {piece: PAWN, team: THEIRS}],
@@ -69,10 +95,19 @@ export const gameSlice = createSlice({
     ],
   },
   reducers: {
-    setOrder: (state, action) => {
-      const { rolls, useMine } = action.payload;
-      if (useMine) state.turn = (rolls.mine > rolls.theirs) ? MINE : THEIRS;
-      else state.turn = (rolls.mine > rolls.theirs) ? THEIRS : MINE;
+    initGame: (state, action) => {
+      const { rolls, useMine, moves } = action.payload;
+      if (useMine) {
+        state.turn = (rolls.mine > rolls.theirs) ? MINE : THEIRS;
+        state.moves = moves;
+      } else {
+        state.turn = (rolls.mine > rolls.theirs) ? THEIRS : MINE;
+        state.moves = {
+          mine: moves.theirs,
+          theirs: moves.mine,
+          middle: moves.middle
+        };
+      }
     },
 
     selectMove: (state, action) => {
@@ -108,5 +143,5 @@ export const gameSlice = createSlice({
   },
 });
 
-export const { setOrder, selectCell, selectMove, theirMove } = gameSlice.actions;
+export const { initGame, selectCell, selectMove, theirMove } = gameSlice.actions;
 export default gameSlice.reducer;

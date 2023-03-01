@@ -1,7 +1,7 @@
 import { Peer as PeerJS } from 'peerjs';
 
 import store from './store';
-import { setOrder, theirMove } from './gameSlice';
+import { initGame, theirMove, MOVES } from './gameSlice';
 import { pushMsg } from './messagesSlice';
 import { forceUpdate } from './utils';
 
@@ -18,10 +18,16 @@ export function initPeer() {
 }
 
 export function connectTo(peerId) {
+  const rolls = {mine: Math.random(), theirs: Math.random()};
+  const shuffledMoves = MOVES.sort((a, b) => 0.5 - Math.random());
+  const moves = {
+    mine: [shuffledMoves[0], shuffledMoves[1]],
+    theirs: [shuffledMoves[2], shuffledMoves[3]],
+    middle: shuffledMoves[4],
+  };
+
   const conn = Peer.connect(peerId, {
-    metadata: {
-      rolls: {mine: Math.random(), theirs: Math.random() },
-    },
+    metadata: {rolls, moves},
   });
   conn.on('open', () => setConn(conn, true));
 }
@@ -45,7 +51,10 @@ export function setConn(conn, useMine) {
 
   console.log('Rolls:', conn.metadata.rolls);
   if (conn.metadata.rolls.mine === conn.metadata.rolls.theirs) console.log('TODO: Reroll');
-  else store.dispatch(setOrder({rolls: conn.metadata.rolls, useMine}));
+  else store.dispatch(initGame({
+    rolls: conn.metadata.rolls, useMine,
+    moves: conn.metadata.moves,
+  }));
 
   store.dispatch(pushMsg(conn.peer + ' joined'));
   store.dispatch(forceUpdate('conn'));
