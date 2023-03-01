@@ -3,7 +3,7 @@ import { selectCell, selectMove, MINE, THEIRS, KING } from './gameSlice';
 import { Conn } from './peer';
 import { transform } from './utils';
 
-function Move({ move, whose, middle }) {
+function Move({ move, whose, idx }) {
   const { name, deltas, pos } = move;
   const dispatch = useDispatch();
 
@@ -28,7 +28,7 @@ function Move({ move, whose, middle }) {
   }
 
   const onClickMine = () => {
-    if (!middle) dispatch(selectMove(deltas));
+    if (idx !== 2) dispatch(selectMove({idx}));
   }
 
   const onClickTheirs = () => {
@@ -58,7 +58,7 @@ function Move({ move, whose, middle }) {
 function Moves({ moves, whose }) {
   return (
     <div className="Moves">
-      { moves.map((move, i) => <Move move={move} whose={whose} key={i} />) }
+      { moves.map((move, i) => <Move move={move} whose={whose} idx={i} key={i} />) }
     </div>
   );
 }
@@ -95,18 +95,14 @@ function Board() {
 
 export default function Game() {
   const turn = useSelector((state) => state.game.turn);
-
-  const move = {name: 'Move 1', deltas: [{x: 1, y: 0}, {x: -1, y: 0}, {x: 0, y: -1}, {x: -1, y: -1}], pos: {row: 2, col: 2}};
-  const theirMoves = [move, move];
-  const myMoves = [move, move];
-  const middleMove = move;
+  const moves = useSelector((state) => state.game.moves);
 
   return (
     <div className="Game">
-      <Moves moves={theirMoves} whose={THEIRS} />
+      <Moves moves={moves.theirs} whose={THEIRS} />
       <Board />
-      <Moves moves={myMoves} whose={MINE} />
-      <Move move={middleMove} whose={turn} middle={true} />
+      <Moves moves={moves.mine} whose={MINE} />
+      <Move move={moves.middle} whose={turn} idx={2} />
       { turn === MINE ? 'Your turn' : 'Their turn' }
     </div>
   );

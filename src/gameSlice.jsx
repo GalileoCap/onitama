@@ -4,6 +4,7 @@ import { transform } from './utils';
 
 export const MINE = 0; export const THEIRS = 1;
 export const PAWN = 0; export const KING = 1;
+const MOVE1 = {name: 'Move 1', deltas: [{x: 1, y: 0}, {x: -1, y: 0}, {x: 0, y: -1}, {x: -1, y: -1}], pos: {row: 2, col: 2}};
 
 function isMine(from, board) {
   const state = board[from.row][from.col];
@@ -19,7 +20,7 @@ function canMove(from, to, move, board) {
 
   const notSameTeam = (fromState !== null && fromState.team === MINE) && (toState === null || toState.team === THEIRS);
   let moveAllowsIt = false;
-  for (let { x, y } of move) { // Move allows it
+  for (let { x, y } of move.deltas) { // Move allows it
     moveAllowsIt |= x === dx && y === dy;
   }
 
@@ -27,11 +28,25 @@ function canMove(from, to, move, board) {
 }
 
 function performMove(from, to, state) {
+  // Move the piece
   state.board[to.row][to.col] = state.board[from.row][from.col];
   state.board[from.row][from.col] = null;
+
+  if (state.turn === MINE) {
+    const foo = state.moves.mine[state.moveIdx];
+    state.moves.mine[state.moveIdx] = state.moves.middle;
+    state.moves.middle = foo;
+  } else { // THEIRS
+    const foo = state.moves.theirs[state.moveIdx];
+    state.moves.theirs[state.moveIdx] = state.moves.middle;
+    state.moves.middle = foo;
+  }
+
+  // Reset values
   state.turn = (state.turn + 1) % 2;
   state.cell = undefined;
-  state.move = undefined;
+  state.moveIdx = undefined;
+  state.moves.middle.whose = state.turn;
 }
 
 export const gameSlice = createSlice({
@@ -39,7 +54,12 @@ export const gameSlice = createSlice({
   initialState: {
     turn: undefined,
     cell: undefined,
-    move: undefined,
+    moveIdx: undefined,
+    moves: {
+      mine: [MOVE1, MOVE1],
+      theirs: [MOVE1, MOVE1],
+      middle: MOVE1,
+    },
     board: [
       [{piece: PAWN, team: THEIRS}, {piece: PAWN, team: THEIRS}, {piece: KING, team: THEIRS}, {piece: PAWN, team: THEIRS}, {piece: PAWN, team: THEIRS}],
       [null, null, null, null, null],
@@ -57,7 +77,7 @@ export const gameSlice = createSlice({
 
     selectMove: (state, action) => {
       if (state.turn !== MINE) return;
-      state.move = action.payload;
+      state.moveIdx = action.payload.idx;
     },
 
     selectCell: (state, action) => {
@@ -68,9 +88,9 @@ export const gameSlice = createSlice({
 
       if (from === undefined && isMine(to, state.board)) { // Choose a piece
         state.cell = to;
-      } else if (state.cell !== undefined && state.move !== undefined && canMove(from, to, state.move, state.board)) { // Move
+      } else if (state.cell !== undefined && state.moveIdx !== undefined && canMove(from, to, state.moves.mine[state.moveIdx], state.board)) { // Move
+        Conn.send({type: 'move', from, to, moveIdx: state.moveIdx});
         performMove(from, to, state);
-        Conn.send({type: 'move', from, to});
       } else { // De-select
         state.cell = undefined;
       }
@@ -81,7 +101,8 @@ export const gameSlice = createSlice({
 
       //TODO: Check valid move
 
-      const { from, to } = action.payload;
+      const { from, to, moveIdx } = action.payload;
+      state.moveIdx = moveIdx;
       performMove(transform(from), transform(to), state);
     }
   },
