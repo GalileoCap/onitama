@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Layout, Home, Play, About } from './pages';
+import { Layout, Home, Play, Join, About } from './pages';
 
 export default function App() {
   return (
@@ -8,7 +8,7 @@ export default function App() {
         <Route path="/onitama" element={<Layout />}>
            <Route index element={<Home />} />
            <Route path="play" element={<Play />} />
-          { /* TODO: Join */}
+           <Route path="join/:peerId" element={<Join />} />
            <Route path="about" element={<About />} />
           { /* TODO: NoPage */}
         </Route>
