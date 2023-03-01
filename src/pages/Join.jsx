@@ -10,10 +10,10 @@ export function Join() {
   const { peerId } = useParams();
   useEffect(() => {
     if (Conn === undefined) connectTo(peerId);
-    else navigate('/onitama/play'); //TODO: Remove fixed path
+    else navigate('/play'); //TODO: Remove fixed path
   }, []);
 
-  if (Conn !== undefined) navigate('/onitama/play'); //TODO: Remove fixed path
+  if (Conn !== undefined) navigate('/play'); //TODO: Remove fixed path
 
   return (
     <div className="Join">

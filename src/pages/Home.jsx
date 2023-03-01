@@ -8,7 +8,7 @@ export function Home() {
       <nav>
         <ul>
           <li>
-            <Link to="/onitama/">Home</Link>
+            <Link to="/">Home</Link>
           </li>
           <li>
             <Link to="play">Play</Link>

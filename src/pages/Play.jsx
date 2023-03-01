@@ -32,7 +32,7 @@ function Connect() {
 
 function Share() {
   const onClick = () => {
-    const link = window.location.origin + '/onitama/join/' + Peer.id; //TODO: Remove fixed path
+    const link = window.location.origin + '/onitama/#/join/' + Peer.id; //TODO: Remove fixed path
     navigator.clipboard.writeText(link);
   }
 

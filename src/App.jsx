@@ -1,11 +1,11 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import { Layout, Home, Play, Join, About } from './pages';
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
-        <Route path="/onitama" element={<Layout />}>
+        <Route path="/" element={<Layout />}>
            <Route index element={<Home />} />
            <Route path="play" element={<Play />} />
            <Route path="join/:peerId" element={<Join />} />
@@ -13,6 +13,6 @@ export default function App() {
           { /* TODO: NoPage */}
         </Route>
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }

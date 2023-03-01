@@ -1,5 +1,6 @@
 {
   "name": "onitama",
+  "homepage": "/onitama/#",
   "private": true,
   "version": "0.0.0",
   "type": "module",
