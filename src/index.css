@@ -58,4 +58,14 @@
   border: 1px solid black;
   height: 1em; width: 1em;
   overflow: hidden;
+
+  background-color: var(--movecell-color);
+}
+
+.MoveCell.Pos {
+  --movecell-color: black;
+}
+
+.MoveCell.Dest {
+  --movecell-color: green;
 }

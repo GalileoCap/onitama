@@ -2,27 +2,37 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectMove, MINE } from './gameSlice';
 import { transform } from '../utils';
 
+const EMPTY = 0; const POS = 1; const DEST = 2;
+
+export function MoveCell({ state }) {
+  const className = 'MoveCell' + (state === POS ? ' Pos' : (state === DEST ? ' Dest' : ' Empty'));
+  return (
+    <td className={className}>
+    </td>
+  );
+}
+
 export function Move({ move, whose, idx }) {
   const { name, deltas, pos } = move;
   const dispatch = useDispatch();
 
   const grid = [
-    [0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0],
+    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
   ];
   if (whose === MINE) {
-    grid[pos.row][pos.col] = 1;
+    grid[pos.row][pos.col] = POS;
     for (let { x, y } of deltas) {
-      grid[pos.row + y][pos.col + x] = 2;
+      grid[pos.row + y][pos.col + x] = DEST;
     }
   } else { // THEIRS
     const { row, col } = transform(pos);
-    grid[pos.row][pos.col] = 1;
+    grid[row][col] = POS;
     for (let { x, y } of deltas) {
-      grid[pos.row - y][pos.col - x] = 2;
+      grid[row - y][col - x] = DEST;
     }
   }
 
@@ -39,11 +49,7 @@ export function Move({ move, whose, idx }) {
       <tbody>
         { grid.map((row, i) => (
             <tr key={i}>
-              { row.map((cell, j) => (
-                <td key={j} className="MoveCell">
-                  {cell}
-                </td>
-              )) }
+              { row.map((cell, j) => <MoveCell state={cell} key={j} /> ) }
             </tr>
         )) }
       </tbody>
