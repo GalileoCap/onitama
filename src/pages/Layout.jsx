@@ -3,6 +3,8 @@ import { Outlet, Link } from "react-router-dom";
 export function Layout() {
   return (
     <>
+      <Outlet />
+
       <nav>
         <ul>
           <li>
@@ -16,8 +18,7 @@ export function Layout() {
           </li>
         </ul>
       </nav>
-
-      <Outlet />
+      <button onClick={() => Notification.requestPermission()}>Allow notifications</button>
     </>
   );
 }

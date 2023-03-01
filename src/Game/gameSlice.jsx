@@ -53,6 +53,12 @@ function canMove(from, to, move, board) {
   return notSameTeam && moveAllowsIt;
 }
 
+function notifyMove(turn) {
+  if (turn === THEIRS && document.hidden && Notification.permission === 'granted') {
+    const notif = new Notification('They moved!');
+  }
+}
+
 function performMove(from, to, state) {
   // Move the piece
   state.board[to.row][to.col] = state.board[from.row][from.col];
@@ -67,6 +73,8 @@ function performMove(from, to, state) {
     state.moves.theirs[state.moveIdx] = state.moves.middle;
     state.moves.middle = foo;
   }
+
+  notifyMove(state.turn);
 
   // Reset values
   state.turn = (state.turn + 1) % 2;
