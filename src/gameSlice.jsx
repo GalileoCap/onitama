@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { Conn } from './peer';
+import { transform } from './utils';
 
 export const MINE = 0; export const THEIRS = 1;
 export const PAWN = 0; export const KING = 1;
@@ -13,8 +14,8 @@ function canMove(from, to, move, board) {
   const fromState = board[from.row][from.col];
   const toState = board[to.row][to.col];
 
-  const dy = from.row - to.row;
-  const dx = from.col - to.col;
+  const dy = to.row - from.row;
+  const dx = to.col - from.col;
 
   const notSameTeam = (fromState !== null && fromState.team === MINE) && (toState === null || toState.team === THEIRS);
   let moveAllowsIt = false;
@@ -23,20 +24,6 @@ function canMove(from, to, move, board) {
   }
 
   return notSameTeam && moveAllowsIt;
-}
-
-function transform({ row, col }) {
-  const f = (x) => { //TODO: Smarter?
-    switch (x) {
-    case 0: return 4;
-    case 1: return 3;
-    case 2: return 2;
-    case 3: return 1;
-    case 4: return 0;
-    }
-  }
-
-  return { row: f(row), col: f(col) };
 }
 
 function performMove(from, to, state) {

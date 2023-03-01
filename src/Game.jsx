@@ -1,12 +1,34 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { selectCell, selectMove, MINE, KING } from './gameSlice';
+import { selectCell, selectMove, MINE, THEIRS, KING } from './gameSlice';
 import { Conn } from './peer';
+import { transform } from './utils';
 
-function Move({ deltas, whose }) {
+function Move({ move, whose, middle }) {
+  const { name, deltas, pos } = move;
   const dispatch = useDispatch();
 
+  const grid = [
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+  ];
+  if (whose === MINE) {
+    grid[pos.row][pos.col] = 1;
+    for (let { x, y } of deltas) {
+      grid[pos.row + y][pos.col + x] = 2;
+    }
+  } else { // THEIRS
+    const { row, col } = transform(pos);
+    grid[pos.row][pos.col] = 1;
+    for (let { x, y } of deltas) {
+      grid[pos.row - y][pos.col - x] = 2;
+    }
+  }
+
   const onClickMine = () => {
-    dispatch(selectMove(deltas));
+    if (!middle) dispatch(selectMove(deltas));
   }
 
   const onClickTheirs = () => {
@@ -14,9 +36,30 @@ function Move({ deltas, whose }) {
   }
 
   return (
-    <button onClick={whose === MINE ? onClickMine : onClickTheirs}>
-      Move
-    </button>
+    <table className="Move" onClick={whose === MINE ? onClickMine : onClickTheirs}>
+      <tbody>
+        { grid.map((row, i) => (
+            <tr key={i}>
+              { row.map((cell, j) => (
+                <td key={j} className="MoveCell">
+                  {cell}
+                </td>
+              )) }
+            </tr>
+        )) }
+      </tbody>
+      <caption>
+        { name }
+      </caption>
+    </table>
+  );
+}
+
+function Moves({ moves, whose }) {
+  return (
+    <div className="Moves">
+      { moves.map((move, i) => <Move move={move} whose={whose} key={i} />) }
+    </div>
   );
 }
 
@@ -53,10 +96,17 @@ function Board() {
 export default function Game() {
   const turn = useSelector((state) => state.game.turn);
 
+  const move = {name: 'Move 1', deltas: [{x: 1, y: 0}, {x: -1, y: 0}, {x: 0, y: -1}, {x: -1, y: -1}], pos: {row: 2, col: 2}};
+  const theirMoves = [move, move];
+  const myMoves = [move, move];
+  const middleMove = move;
+
   return (
     <div className="Game">
+      <Moves moves={theirMoves} whose={THEIRS} />
       <Board />
-      <Move deltas={[{x: 1, y: 0}, {x: -1, y: 0}, {x: 0, y: 1}, {x: 0, y: -1}]} whose={MINE} />
+      <Moves moves={myMoves} whose={MINE} />
+      <Move move={middleMove} whose={turn} middle={true} />
       { turn === MINE ? 'Your turn' : 'Their turn' }
     </div>
   );
