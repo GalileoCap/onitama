@@ -7,33 +7,29 @@ import { forceUpdate } from './utils';
 
 export let Peer = undefined;
 export let Conn = undefined;
-export let MyRoll = undefined;
 
 export function initPeer() {
   Peer = new PeerJS();
   Peer.on('connection', (conn) => {
-    if (Conn === undefined) setConn(conn);
+    if (Conn === undefined) setConn(conn, false);
     else conn.close();
   });
   Peer.on('open', () => store.dispatch(forceUpdate('peer')));
 }
 
 export function connectTo(peerId) {
-  const conn = Peer.connect(peerId);
-  conn.on('open', () => setConn(conn));
+  const conn = Peer.connect(peerId, {
+    metadata: {
+      rolls: {mine: Math.random(), theirs: Math.random() },
+    },
+  });
+  conn.on('open', () => setConn(conn, true));
 }
 
-export function setConn(conn) {
+export function setConn(conn, useMine) {
   Conn = conn;
-  MyRoll = Math.random();
   Conn.on('data', (data) => {
     switch (data.type) {
-    case 'init':
-      //TODO: SECURITY: Block incoming inits after first one
-      if (data.roll == MyRoll) console.log('Retry'); //TODO: Retry
-      else store.dispatch(setOrder({mine: MyRoll, theirs: data.roll}));
-      break;
-
     case 'move':
       store.dispatch(theirMove(data));
       break;
@@ -46,10 +42,10 @@ export function setConn(conn) {
       console.log('default', data);
     }
   });
-  setTimeout(() => conn.send({
-    type: 'init',
-    roll: MyRoll,
-  }), 0); //TODO: This tries to fix a race condition where the peer who connected hasn't set the callback (conn.on('data')) yet.
+
+  console.log('Rolls:', conn.metadata.rolls);
+  if (conn.metadata.rolls.mine === conn.metadata.rolls.theirs) console.log('TODO: Reroll');
+  else store.dispatch(setOrder({rolls: conn.metadata.rolls, useMine}));
 
   store.dispatch(pushMsg(conn.peer + ' joined'));
   store.dispatch(forceUpdate('conn'));

@@ -63,8 +63,9 @@ export const gameSlice = createSlice({
   },
   reducers: {
     setOrder: (state, action) => {
-      const { mine, theirs } = action.payload;
-      state.turn = (mine > theirs) ? MINE : THEIRS;
+      const { rolls, useMine } = action.payload;
+      if (useMine) state.turn = (rolls.mine > rolls.theirs) ? MINE : THEIRS;
+      else state.turn = (rolls.mine > rolls.theirs) ? THEIRS : MINE;
     },
 
     selectMove: (state, action) => {
