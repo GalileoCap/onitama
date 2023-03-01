@@ -1,23 +1,18 @@
-import { Conn } from './peer';
-import { useForceUpdate } from './utils';
-
-import Connect from './Connect';
-import Game from './Game/Game';
-import Chat from './Chat/Chat';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Layout, Home, Play, About } from './pages';
 
 export default function App() {
-  useForceUpdate('conn');
-
   return (
-    <div className="App">
-      {
-        Conn === undefined
-        ? <Connect />
-        : <>
-          <Game />
-          <Chat />
-        </>
-      }
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/onitama" element={<Layout />}>
+           <Route index element={<Home />} />
+           <Route path="play" element={<Play />} />
+          { /* TODO: Join */}
+           <Route path="about" element={<About />} />
+          { /* TODO: NoPage */}
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
