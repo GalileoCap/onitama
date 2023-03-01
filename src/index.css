@@ -6,12 +6,33 @@
   margin-inline: auto;
 
   user-select: none;
+
+}
+
+.Mine {
+  --team-color-hex: 173, 216, 230;
+  --team-color: rgb(var(--team-color-hex))
+}
+
+.Theirs {
+  --team-color-hex: 255, 0, 0;
+  --team-color: rgb(var(--team-color-hex))
 }
 
 .Board .BoardCell {
   border: 1px solid black;
   height: 25px; width: 25px;
   overflow: hidden;
+
+  background-color: rgba(var(--team-color-hex), 0.5);
+}
+
+.BoardPawn {
+  height: 100%; width: 100%; /* Occupy the entire cell */
+
+  stroke-width: 2;
+  stroke: green;
+  fill: var(--team-color);
 }
 
 .Moves {
