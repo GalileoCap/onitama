@@ -3,7 +3,7 @@ import { Outlet, Link } from "react-router-dom";
 export function Home() {
   return (
     <div className="Home">
-      <h1>Onitama</h1>
+      <h1>Home</h1>
       
       <nav>
         <ul>
@@ -13,9 +13,9 @@ export function Home() {
           <li>
             <Link to="play">Play</Link>
           </li>
-          <li>
-            <Link to="about">About</Link>
-          </li>
+          { /*<li>
+            <Link to="about">About</Link> TODO
+          </li>*/ }
         </ul>
       </nav>
     </div>

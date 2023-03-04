@@ -1,10 +1,13 @@
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Peer, Conn, connectTo } from '../peer';
-import { useForceUpdate } from '../utils';
+import { Peer, Conn, connectTo } from '../../peer';
+import { useForceUpdate } from '../../utils';
 
-import Game from '../Game/Game';
-import Chat from '../Chat/Chat';
+//import Game from '../Game/Game'; //TODO
+
+import Chat from './Chat';
+import { Board, Mine, Theirs, Extra } from './Game';
+import './Play.css';
 
 function Connect() {
   const onConnect = (ev) => {
@@ -55,8 +58,14 @@ function NoConn() {
 function Connected() {
   return (
     <>
-      <Game />
+      <div className="Title Section">Title</div>
+      <div className="Info Section">Info</div>
       <Chat />
+      <Extra />
+      <div className="Actions Section">Actions</div>
+      <Theirs />
+      <Board />
+      <Mine />
     </>
   );
 }

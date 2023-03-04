@@ -13,4 +13,4 @@ export const chatSlice = createSlice({
 });
 
 export const { pushMsg } = chatSlice.actions;
-export default chatSlice.reducer;
+export const chatReducer = chatSlice.reducer;

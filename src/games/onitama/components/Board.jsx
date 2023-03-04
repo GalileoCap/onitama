@@ -1,5 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { selectCell, MINE, KING } from './gameSlice';
+import { selectCell, MINE, KING } from '../gameSlice';
+import '../index.css';
 
 export function BoardPawn({ state }) {
   const className = 'BoardPawn' + (state === null ? ' Empty' : ((state.piece === KING ? ' King' : ' Pawn') + (state.team === MINE ? ' Mine' : ' Theirs')));
@@ -33,17 +34,17 @@ export function BoardCell({ state, row, col }) {
   )
 }
 
-export default function Board() {
+export function Board() {
   const board = useSelector((state) => state.game.board);
 
   return (
-    <table className="Board">
+    <table id="OnitamaBoard">
       <tbody>
-      { board.map((row, i) => (
-          <tr key={i}>
-            { row.map((cell, j) => <BoardCell state={cell} row={i} col={j} key={j}/>) }
-          </tr>
-        )) }
+        { board.map((row, i) => (
+            <tr key={i}>
+              { row.map((cell, j) => <BoardCell state={cell} row={i} col={j} key={j}/>) }
+            </tr>
+          )) }
       </tbody>
     </table>
   );

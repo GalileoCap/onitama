@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { selectMove, MINE } from './gameSlice';
+import { selectMove, MINE, THEIRS } from '../gameSlice';
 import { transform } from '../utils';
 
 const EMPTY = 0; const POS = 1; const DEST = 2;
@@ -60,10 +60,32 @@ export function Move({ move, whose, idx }) {
   );
 }
 
-export default function Moves({ moves, whose }) {
+export function Moves({ moves, whose }) {
   return (
     <div className="Moves">
       { moves.map((move, i) => <Move move={move} whose={whose} idx={i} key={i} />) }
+    </div>
+  );
+}
+
+export function Mine() {
+  const moves = useSelector((state) => state.game.moves.mine);
+  return <Moves moves={moves} whose={MINE} />;
+}
+
+export function Theirs() {
+  const moves = useSelector((state) => state.game.moves.theirs);
+  return <Moves moves={moves} whose={THEIRS} />;
+}
+
+export function Extra() {
+  const move = useSelector((state) => state.game.moves.middle);
+  const turn = useSelector((state) => state.game.turn);
+
+  return (
+    <div>
+      <Move move={move} whose={turn} idx={2} />
+      { turn === MINE ? 'Your turn' : 'Their turn' }
     </div>
   );
 }

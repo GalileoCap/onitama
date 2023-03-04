@@ -1,0 +1,65 @@
+.Play {
+  /* Have it take up the entire screen */
+  padding: 0;
+  margin: 0;
+  overflow: hidden; /* Disable scrolling bars that for some reason appear */
+  height: 100%; width: 100%;
+  position: absolute;
+  margin-top: var(--gap);
+  margin-left: var(--gap);
+
+  /* Grid with the fixed relative sizes */
+  display: grid;
+  grid-template-columns: 17% 64.8% 17%;
+  grid-template-rows: 14.6% 68.8% 14.6%;
+  gap: var(--gap); /* TODO: Fix some gaps being smaller than others */
+
+  --gap: 0.3%;
+}
+
+.Play > .Section {
+  border-style: solid;
+  border-color: gray;
+  overflow: auto;
+}
+
+.Play > .Title {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.Play > .Info {
+  grid-column: 3;
+  grid-row-start: 1;
+  grid-row-end: 3;
+}
+
+.Play > .Chat {
+  grid-column: 3;
+  grid-row: 3;
+}
+
+.Play > .Extra {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.Play > .Actions {
+  grid-column: 1;
+  grid-row: 3;
+}
+
+.Play > .Enemy {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.Play > .Mine {
+  grid-column: 2;
+  grid-row: 3;
+}
+
+.Play > .Board {
+  grid-column: 2;
+  grid-row: 2;
+}

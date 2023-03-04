@@ -1,8 +1,8 @@
 import { Peer as PeerJS } from 'peerjs';
 
 import store from './store';
-import { initGame, theirMove, MOVES } from './Game/gameSlice';
-import { pushMsg } from './Chat/chatSlice';
+import { initGame, theirMove, MOVES } from './games/onitama/gameSlice';
+import { pushMsg } from './components/Chat';
 import { forceUpdate } from './utils';
 
 export let Peer = undefined;
@@ -41,7 +41,7 @@ export function setConn(conn, useMine) {
       break;
 
     case 'msg':
-      store.dispatch(pushMsg(data.text));
+      store.dispatch(pushMsg({mine: false, text: data.text}));
       break;
 
     default:
@@ -49,13 +49,12 @@ export function setConn(conn, useMine) {
     }
   });
 
-  console.log('Rolls:', conn.metadata.rolls);
   if (conn.metadata.rolls.mine === conn.metadata.rolls.theirs) console.log('TODO: Reroll');
   else store.dispatch(initGame({
     rolls: conn.metadata.rolls, useMine,
     moves: conn.metadata.moves,
   }));
 
-  store.dispatch(pushMsg(conn.peer + ' joined'));
+  //store.dispatch(pushMsg(Conn.peer + ' joined'));
   store.dispatch(forceUpdate('conn'));
 }

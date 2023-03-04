@@ -16,7 +16,7 @@ function Main() {
   }, []);
 
   return (
-    <div>
+    <div className="Main">
       {
         Peer === undefined
         ? <></>

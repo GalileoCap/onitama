@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
-import gameReducer from './Game/gameSlice';
-import chatReducer from './Chat/chatSlice';
+import gameReducer from './games/onitama/gameSlice'; //TODO
+import { chatReducer } from './components/Chat';
 import { utilsReducer } from './utils';
 
 export default configureStore({

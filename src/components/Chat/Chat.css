@@ -1,0 +1,41 @@
+.ChatComponent {
+  /* Have it take up the entire screen */
+  height: 100%; width: 100%;
+
+  /* Grid with the fixed relative sizes */
+  display: grid;
+  grid-template-rows: 80% 20%;
+}
+
+.ChatComponent > .MessagesComponent {
+  grid-row: 1;
+
+  padding: 0.2em;
+  overflow: auto;
+}
+
+.ChatComponent > .MessagesComponent > .MessageComponent {
+  margin-bottom: 0.2em;
+  width: 100%;
+  height: auto;
+  float: left;
+}
+
+.ChatComponent > .MessagesComponent > .MessageComponent > .Msg {
+  padding: 0.2em;
+  border: 2px solid lightgrey;
+}
+
+.ChatComponent > .MessagesComponent > .MessageComponent > .Mine {
+  float: right;
+  border-radius: 10px 0px 10px 10px;
+}
+
+.ChatComponent > .MessagesComponent > .MessageComponent > .Theirs {
+  float: left;
+  border-radius: 0px 10px 10px 10px;
+}
+
+.ChatComponent > .SendMessageComponent {
+  grid-row: 2;
+}
