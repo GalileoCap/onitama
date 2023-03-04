@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectCell, MINE, KING } from '../gameSlice';
 import '../index.css';
@@ -5,7 +6,7 @@ import '../index.css';
 export function BoardPawn({ state }) {
   const className = 'BoardPawn' + (state === null ? ' Empty' : ((state.piece === KING ? ' King' : ' Pawn') + (state.team === MINE ? ' Mine' : ' Theirs')));
   return (
-    <svg className={className} height='25' width='25'>
+    <svg className={className} viewBox="0 0 25 25">
       {
         state === null
         ? <></>
@@ -34,11 +35,27 @@ export function BoardCell({ state, row, col }) {
   )
 }
 
-export function Board() {
+export function Board({ parentRef }) {
   const board = useSelector((state) => state.game.board);
 
+  const [ length, setLength ] = useState(100);
+  useEffect(() => {
+    if (!parentRef.current) return;
+
+    const resizeObserver = new ResizeObserver(() => {
+      const height = parentRef.current.clientHeight;
+      const width = parentRef.current.clientWidth;
+      const newLength = Math.max(Math.min(height, width) * 0.95, 200);
+      if (newLength !== length)
+        setLength(newLength);
+    });
+    resizeObserver.observe(parentRef.current);
+
+    return () => resizeObserver.disconnect();
+  });
+
   return (
-    <table id="OnitamaBoard">
+    <table id="OnitamaBoard" style={{maxHeight: length, maxWidth: length}}>
       <tbody>
         { board.map((row, i) => (
             <tr key={i}>

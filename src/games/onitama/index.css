@@ -4,6 +4,8 @@
   empty-cells: show;
 
   margin-inline: auto;
+  min-width: 200px; min-height: 200px; /* TODO: Fix */
+  width: 100%; height: 100%;
 
   user-select: none;
 }
