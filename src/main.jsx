@@ -16,13 +16,13 @@ function Main() {
   }, []);
 
   return (
-    <div className="Main">
+    <>
       {
         Peer === undefined
         ? <></>
         : <App />
       }
-    </div>
+    </>
   );
 }
 
