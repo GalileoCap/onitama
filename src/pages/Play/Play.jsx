@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Peer, Conn, connectTo } from '../../peer';
 import { useForceUpdate } from '../../utils';
 
@@ -55,30 +55,31 @@ function NoConn() {
   </>
 }
 
-function Connected() {
+function Connected({ game }) {
   return (
     <>
       <div className="Title Section">Title</div>
       <div className="Info Section">Info</div>
       <Chat />
-      <Extra />
+      <Extra game={game} />
       <div className="Actions Section">Actions</div>
-      <Theirs />
-      <Board />
-      <Mine />
+      <Theirs game={game} />
+      <Board game={game} />
+      <Mine game={game} />
     </>
   );
 }
 
 export function Play() {
   useForceUpdate('conn');
+  const { game } = useParams();
 
   return (
     <div className="Play">
       {
         Conn === undefined
         ? <NoConn /> 
-        : <Connected />
+        : <Connected game={game} />
       }
     </div>
   );

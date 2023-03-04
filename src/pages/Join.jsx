@@ -9,6 +9,7 @@ export function Join() {
   const navigate = useNavigate();
   const { peerId } = useParams();
   useEffect(() => {
+    console.log(peerId);
     if (Conn === undefined) connectTo(peerId);
     else navigate('/play'); //TODO: Remove fixed path
   }, []);
