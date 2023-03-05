@@ -2,9 +2,8 @@ import { createContext, useState, useEffect } from 'react';
 import { Peer as PeerJS } from 'peerjs';
 
 import store from './store';
-import { initGame, theirMove, MOVES } from './games/onitama/gameSlice';
-import { initGame as TTTinitGame, theirMove as TTTtheirMove } from './games/tiictaactooee/gameSlice';
 import { pushMsg } from './components/Chat';
+import { gameMsg } from './components/GameWrapper';
 
 let Peer = null;
 let Conn = null;
@@ -60,17 +59,16 @@ function initConn(conn, useMine, setConn) {
   conn.metadata.useMine = useMine;
   conn.on('data', (data) => {
     switch (data.type) {
-    //case 'move':
-      //store.dispatch(theirMove(data));
-      //store.dispatch(TTTtheirMove(data));
-      //break;
+    case 'game':
+      gameMsg(data);
+      break;
 
     case 'msg':
       store.dispatch(pushMsg({mine: false, text: data.text}));
       break;
 
     default:
-      console.log('default', data);
+      console.error('Unhandled message', data);
     }
   });
   conn.on('close', () => {

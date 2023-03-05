@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import store from '../../store';
 import { send2Conn } from '../../peer';
 import { transform } from './utils';
 
@@ -95,6 +96,10 @@ export function getMetadata() { //TODO:
   return {rolls, shuffledMoves, moves};
 }
 
+export function gameMsg(data) {
+  store.dispatch(theirMove(data));
+}
+
 export const gameSlice = createSlice({
   name: 'game',
   initialState: {
@@ -144,7 +149,7 @@ export const gameSlice = createSlice({
       if (from === undefined && isMine(to, state.board)) { // Choose a piece
         state.cell = to;
       } else if (state.cell !== undefined && state.moveIdx !== undefined && canMove(from, to, state.moves.mine[state.moveIdx], state.board)) { // Move
-        send2Conn({type: 'move', from, to, moveIdx: state.moveIdx});
+        send2Conn({type: 'game', from, to, moveIdx: state.moveIdx});
         performMove(from, to, state);
       } else { // De-select
         state.cell = undefined;
