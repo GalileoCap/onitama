@@ -2,6 +2,7 @@ import { Peer as PeerJS } from 'peerjs';
 
 import store from './store';
 import { initGame, theirMove, MOVES } from './games/onitama/gameSlice';
+import { initGame as TTTinitGame, theirMove as TTTtheirMove } from './games/tiictaactooee/gameSlice';
 import { pushMsg } from './components/Chat';
 import { forceUpdate } from './utils';
 
@@ -37,7 +38,8 @@ export function setConn(conn, useMine) {
   Conn.on('data', (data) => {
     switch (data.type) {
     case 'move':
-      store.dispatch(theirMove(data));
+      //store.dispatch(theirMove(data));
+      store.dispatch(TTTtheirMove(data));
       break;
 
     case 'msg':
@@ -50,10 +52,13 @@ export function setConn(conn, useMine) {
   });
 
   if (conn.metadata.rolls.mine === conn.metadata.rolls.theirs) console.log('TODO: Reroll');
-  else store.dispatch(initGame({
-    rolls: conn.metadata.rolls, useMine,
-    moves: conn.metadata.moves,
+  else store.dispatch(TTTinitGame({
+    rolls: Conn.metadata.rolls, useMine,
   }));
+  //else store.dispatch(initGame({
+    //rolls: conn.metadata.rolls, useMine,
+    //moves: conn.metadata.moves,
+  //}));
 
   //store.dispatch(pushMsg(Conn.peer + ' joined'));
   store.dispatch(forceUpdate('conn'));
