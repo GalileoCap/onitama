@@ -7,14 +7,11 @@ export function Join() {
   useForceUpdate('conn');
 
   const navigate = useNavigate();
-  const { peerId } = useParams();
+  const { game, peerId } = useParams();
   useEffect(() => {
-    console.log(peerId);
     if (Conn === undefined) connectTo(peerId);
-    else navigate('/play'); //TODO: Remove fixed path
-  }, []);
-
-  if (Conn !== undefined) navigate('/play'); //TODO: Remove fixed path
+    else navigate('/' + game + '/play'); //TODO: Remove fixed path
+  });
 
   return (
     <div className="Join">

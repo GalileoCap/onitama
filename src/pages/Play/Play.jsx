@@ -33,9 +33,9 @@ function Connect() {
   );
 }
 
-function Share() {
+function Share({ game }) {
   const onClick = () => {
-    const link = window.location.origin + '/onitama/#/join/' + Peer.id; //TODO: Remove fixed path
+    const link = window.location.origin + '/onitama/#/' + game + '/join/' + Peer.id; //TODO: Remove fixed path
     navigator.clipboard.writeText(link);
   }
 
@@ -48,10 +48,10 @@ function Share() {
   )
 }
 
-function NoConn() {
+function NoConn({ game }) {
   return <>
     <Connect />
-    <Share />
+    <Share game={game} />
   </>
 }
 
@@ -78,7 +78,7 @@ export function Play() {
     <div className="Play">
       {
         Conn === undefined
-        ? <NoConn /> 
+        ? <NoConn game={game} /> 
         : <Connected game={game} />
       }
     </div>

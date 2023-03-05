@@ -8,7 +8,7 @@ export default function App() {
         <Route path="/"> { /* TODO: Layout */ }
           <Route index element={<Home />} />
           <Route path=":game/play" element={<Play />} />
-          <Route path="join/:peerId" element={<Join />} />
+          <Route path=":game/join/:peerId" element={<Join />} /> { /* TODO: Join any game */}
           { /* TODO: About */}
           { /* TODO: NoPage */}
         </Route>
