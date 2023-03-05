@@ -3,8 +3,6 @@ import { useParams } from 'react-router-dom';
 import { Peer, Conn, connectTo } from '../../peer';
 import { useForceUpdate } from '../../utils';
 
-//import Game from '../Game/Game'; //TODO
-
 import Chat from './Chat';
 import { Board, Mine, Theirs, Extra } from './Game';
 import './Play.css';

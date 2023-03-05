@@ -2,13 +2,13 @@ import { Outlet, Link } from "react-router-dom";
 
 function GamesList() {
   return (
-    <nav>
+    <nav className='GamesList'>
       <ul>
         <li>
-          <Link to="onitama/play">Onitama</Link>
+          <Link to="onitama">Onitama</Link>
         </li>
         <li>
-          <Link to="tiictaactooee/play">TiicTaacTooee</Link>
+          <Link to="tiictaactooee">TiicTaacTooee</Link>
         </li>
       </ul>
     </nav>
@@ -17,10 +17,16 @@ function GamesList() {
 
 export function Home() {
   return (
-    <div className="Home">
-      <h1>Home</h1>
+    <div id='Home'>
+      <h1>GaliGames</h1>
       
       <GamesList />
     </div>
   );
 }
+
+/*
+ * TODO:
+ *  - Welcome page
+ *  - Dynamic list of available games
+ */

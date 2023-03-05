@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Conn, connectTo } from '../peer';
-import { useForceUpdate } from '../utils';
+import { Conn, connectTo } from '../../peer';
+import { useForceUpdate } from '../../utils';
 
 export function Join() {
   useForceUpdate('conn');
@@ -14,8 +14,13 @@ export function Join() {
   });
 
   return (
-    <div className="Join">
+    <div id="Join">
       Joining game...
     </div>
   );
 }
+
+/*
+ * TODO:
+ *  - Warn on errors/reject
+ */

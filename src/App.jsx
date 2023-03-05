@@ -1,5 +1,5 @@
 import { HashRouter, Routes, Route } from "react-router-dom";
-import { Home, Play, Join } from './pages';
+import { Home, GameHome, Play, Join } from './pages';
 
 export default function App() {
   return (
@@ -7,8 +7,10 @@ export default function App() {
       <Routes>
         <Route path="/"> { /* TODO: Layout */ }
           <Route index element={<Home />} />
+          <Route path=":game" element={<GameHome />} />
           <Route path=":game/play" element={<Play />} />
-          <Route path=":game/join/:peerId" element={<Join />} /> { /* TODO: Join any game */}
+          <Route path=":game/join/:peerId" element={<Join />} />
+          { /* TODO: GameAbout */}
           { /* TODO: About */}
           { /* TODO: NoPage */}
         </Route>
