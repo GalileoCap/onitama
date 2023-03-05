@@ -1,11 +1,11 @@
-import { useParams } from 'react-router-dom';
+import { useOutletContext } from 'react-router-dom';
 
 export function GameAbout() {
-  const { game } = useParams();
+  const { game } = useOutletContext();
 
   return (
     <div id='GameAbout'>
-      <h1>About {game}</h1>
+      <h1>GameAbout {game}</h1>
     </div>
   );
 }

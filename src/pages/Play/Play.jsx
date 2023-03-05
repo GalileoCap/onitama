@@ -1,7 +1,6 @@
 import { useEffect, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { useOutletContext } from 'react-router-dom';
 import { PeerContext } from '../../peer';
-import { useForceUpdate } from '../../utils';
 
 import Chat from './Chat';
 import { Board, Mine, Theirs, Extra } from './Game';
@@ -33,8 +32,9 @@ function Connect() {
   );
 }
 
-function Share({ game }) {
+function Share() {
   const { peer } = useContext(PeerContext);
+  const { game } = useOutletContext();
 
   const onClick = () => {
     const link = window.location.origin + '/onitama/#/' + game + '/join/' + peer.id; //TODO: Remove fixed path
@@ -50,38 +50,37 @@ function Share({ game }) {
   )
 }
 
-function NoConn({ game }) {
+function NoConn() {
   return <>
     <Connect />
-    <Share game={game} />
+    <Share />
   </>
 }
 
-function Connected({ game }) {
+function Connected() {
   return (
     <>
       <div className="Title Section">Title</div>
       <div className="Info Section">Info</div>
       <Chat />
-      <Extra game={game} />
+      <Extra />
       <div className="Actions Section">Actions</div>
-      <Theirs game={game} />
-      <Board game={game} />
-      <Mine game={game} />
+      <Theirs />
+      <Board />
+      <Mine />
     </>
   );
 }
 
 export function Play() {
   const { conn } = useContext(PeerContext);
-  const { game } = useParams();
 
   return (
     <div className="Play">
       {
         conn === null
-        ? <NoConn game={game} /> 
-        : <Connected game={game} />
+        ? <NoConn /> 
+        : <Connected />
       }
     </div>
   );
