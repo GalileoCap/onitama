@@ -1,17 +1,16 @@
-import { useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Conn, connectTo } from '../../peer';
-import { useForceUpdate } from '../../utils';
+import { PeerContext } from '../../peer';
 
 export function Join() {
-  useForceUpdate('conn');
+  const { conn, connectTo } = useContext(PeerContext);
 
   const navigate = useNavigate();
   const { game, peerId } = useParams();
   useEffect(() => {
-    if (Conn === undefined) connectTo(peerId);
+    if (conn === null) connectTo(peerId);
     else navigate('/' + game + '/play'); //TODO: Remove fixed path
-  });
+  }, [conn]);
 
   return (
     <div id="Join">

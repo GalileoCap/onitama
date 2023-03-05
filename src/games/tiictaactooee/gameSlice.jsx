@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Conn } from '../../peer';
+import { send2Conn } from '../../peer';
 
 export const MINE = 0; export const THEIRS = 1;
 
@@ -44,7 +44,7 @@ export const gameSlice = createSlice({
       const { cell } = action.payload;
 
       if (state.turn !== MINE || !isEmpty(state.board, cell)) return;
-      Conn.send({type: 'move', cell});
+      send2Conn({type: 'move', cell});
       performMove({ cell }, state);
     },
     

@@ -1,7 +1,7 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { pushMsg } from './chatSlice';
-import { Conn } from '../../peer';
+import { PeerContext } from '../../peer';
 import './Chat.css';
 
 function Message({ data }) {
@@ -35,6 +35,7 @@ function Messages() {
 }
 
 export function SendMessage() {
+  const { conn } = useContext(PeerContext);
   const dispatch = useDispatch();
 
   const onSend = (ev) => {
@@ -43,7 +44,7 @@ export function SendMessage() {
     const text = textComponent.value || 'ping'; textComponent.value = '';
 
     dispatch(pushMsg({mine: true, text}));
-    Conn.send({type: 'msg', text});
+    conn.send({type: 'msg', text});
   }
 
   return (

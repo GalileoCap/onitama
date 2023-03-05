@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import { Peer, Conn, connectTo } from '../../peer';
+import { PeerContext } from '../../peer';
 import { useForceUpdate } from '../../utils';
 
 import Chat from './Chat';
@@ -8,6 +8,8 @@ import { Board, Mine, Theirs, Extra } from './Game';
 import './Play.css';
 
 function Connect() {
+  const { peer, connectTo } = useContext(PeerContext);
+
   const onConnect = (ev) => {
     ev.preventDefault();
     const peerIdComponent = ev.target.querySelector('input[name="peerId"]');
@@ -17,8 +19,8 @@ function Connect() {
 
   return (
     <div className="Connect">
-      <div onClick={() => navigator.clipboard.writeText(Peer.id)}>
-        {Peer.id}
+      <div onClick={() => navigator.clipboard.writeText(peer.id)}>
+        {peer.id}
       </div>
       <form onSubmit={onConnect}>
         <label>
@@ -32,8 +34,10 @@ function Connect() {
 }
 
 function Share({ game }) {
+  const { peer } = useContext(PeerContext);
+
   const onClick = () => {
-    const link = window.location.origin + '/onitama/#/' + game + '/join/' + Peer.id; //TODO: Remove fixed path
+    const link = window.location.origin + '/onitama/#/' + game + '/join/' + peer.id; //TODO: Remove fixed path
     navigator.clipboard.writeText(link);
   }
 
@@ -69,13 +73,13 @@ function Connected({ game }) {
 }
 
 export function Play() {
-  useForceUpdate('conn');
+  const { conn } = useContext(PeerContext);
   const { game } = useParams();
 
   return (
     <div className="Play">
       {
-        Conn === undefined
+        conn === null
         ? <NoConn game={game} /> 
         : <Connected game={game} />
       }
