@@ -83,6 +83,18 @@ function performMove(from, to, state) {
   state.moves.middle.whose = state.turn;
 }
 
+export function getMetadata() { //TODO: 
+  const rolls = {mine: Math.random(), theirs: Math.random()};
+  const shuffledMoves = MOVES.sort((a, b) => 0.5 - Math.random());
+  const moves = {
+    mine: [shuffledMoves[0], shuffledMoves[1]],
+    theirs: [shuffledMoves[2], shuffledMoves[3]],
+    middle: shuffledMoves[4],
+  };
+
+  return {rolls, shuffledMoves, moves};
+}
+
 export const gameSlice = createSlice({
   name: 'game',
   initialState: {
@@ -152,4 +164,4 @@ export const gameSlice = createSlice({
 });
 
 export const { initGame, selectCell, selectMove, theirMove } = gameSlice.actions;
-export default gameSlice.reducer;
+export const gameReducer = gameSlice.reducer;

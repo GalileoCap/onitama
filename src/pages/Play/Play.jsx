@@ -1,5 +1,6 @@
 import { useEffect, useContext } from 'react';
 import { useOutletContext } from 'react-router-dom';
+import store from '../../store';
 import { PeerContext } from '../../peer';
 
 import Chat from './Chat';
@@ -8,12 +9,13 @@ import './Play.css';
 
 function Connect() {
   const { peer, connectTo } = useContext(PeerContext);
+  const { getMetadata } = useOutletContext();
 
   const onConnect = (ev) => {
     ev.preventDefault();
     const peerIdComponent = ev.target.querySelector('input[name="peerId"]');
     const peerId = peerIdComponent.value; peerIdComponent.value = '';
-    connectTo(peerId);
+    connectTo(peerId, getMetadata());
   }
 
   return (
@@ -58,6 +60,13 @@ function NoConn() {
 }
 
 function Connected() {
+  const { conn } = useContext(PeerContext);
+  const { initGame } = useOutletContext();
+
+  useEffect(() => {
+    store.dispatch(initGame(conn.metadata));
+  }, [initGame, conn]);
+
   return (
     <>
       <div className="Title Section">Title</div>

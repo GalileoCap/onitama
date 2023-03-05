@@ -1,3 +1,4 @@
+import { createContext, useState, useEffect } from 'react';
 import { Peer as PeerJS } from 'peerjs';
 
 import store from './store';
@@ -5,9 +6,8 @@ import { initGame, theirMove, MOVES } from './games/onitama/gameSlice';
 import { initGame as TTTinitGame, theirMove as TTTtheirMove } from './games/tiictaactooee/gameSlice';
 import { pushMsg } from './components/Chat';
 
-import { createContext, useState, useEffect } from 'react';
-
-let isConnected = false; // To prevent multiple connections //TODO: Remove
+let Peer = null;
+let Conn = null;
 
 export const PeerContext = createContext(null);
 export function PeerProvider({ children }) {
@@ -16,25 +16,23 @@ export function PeerProvider({ children }) {
 
   useEffect(() => {
     // Init peer
-    const peer = new PeerJS();
-    peer.on('open', () => setPeer(peer));
-    peer.on('connection', (newConn) => {
-      if (isConnected) newConn.close();
-      else initConn(newConn, false, setConn);
-    });
-
-    peer.on('disconneted', () => {
+    Peer = new PeerJS();
+    Peer.on('open', () => setPeer(Peer));
+    Peer.on('connection', (newConn) => initConn(newConn, false, setConn));
+    Peer.on('disconneted', () => {
       console.log('Peer disconneted')
       //TODO: Handle reconnect
     });
-    peer.on('close', () => {
+    Peer.on('close', () => {
       console.log('Peer close');
       setPeer(null);
+      Peer = null;
       //TODO: Reopen
     });
-    peer.on('error', (err) => {
+    Peer.on('error', (err) => {
       console.error('Peer error:', err);
       setPeer(null);
+      Peer = null;
       //TODO: Handle/close
     });
   }, []);
@@ -42,10 +40,10 @@ export function PeerProvider({ children }) {
   return (
     <PeerContext.Provider value={{
       peer, conn,
-      connectTo: (peerId) => connectTo(peerId, peer, setConn),
+      connectTo: (peerId, metadata) => connectTo(peerId, metadata, setConn),
     }}>
       {
-        peer 
+        peer !== null
         ? children
         : <>Loading...</>
       }
@@ -54,12 +52,18 @@ export function PeerProvider({ children }) {
 }
 
 function initConn(conn, useMine, setConn) {
+  if (Conn !== null) {
+    conn.close();
+    return;
+  }
+
+  conn.metadata.useMine = useMine;
   conn.on('data', (data) => {
     switch (data.type) {
-    case 'move':
+    //case 'move':
       //store.dispatch(theirMove(data));
-      store.dispatch(TTTtheirMove(data));
-      break;
+      //store.dispatch(TTTtheirMove(data));
+      //break;
 
     case 'msg':
       store.dispatch(pushMsg({mine: false, text: data.text}));
@@ -72,6 +76,7 @@ function initConn(conn, useMine, setConn) {
   conn.on('close', () => {
     console.log('Connection closed');
     setConn(null);
+    Conn = null;
     //TODO: Handle, wait for reconnect
   })
   conn.on('error', (err) => {
@@ -79,36 +84,24 @@ function initConn(conn, useMine, setConn) {
     //TODO: Handle, warn/close game
   })
 
-  if (conn.metadata.rolls.mine === conn.metadata.rolls.theirs) console.log('TODO: Reroll');
-  else store.dispatch(TTTinitGame({
-    rolls: conn.metadata.rolls, useMine,
-  }));
-  //else store.dispatch(initGame({
-    //rolls: conn.metadata.rolls, useMine,
-    //moves: conn.metadata.moves,
-  //}));
-
-  //store.dispatch(pushMsg(Conn.peer + ' joined'));
-
-  send2Conn = (data) => conn.send(data);
-  isConnected = true;
-  setConn(conn);
+  Conn = conn;
+  setConn(Conn);
 }
 
-function connectTo(peerId, peer, setConn) {
-  // TODO: Game specific
-  const rolls = {mine: Math.random(), theirs: Math.random()};
-  const shuffledMoves = MOVES.sort((a, b) => 0.5 - Math.random());
-  const moves = {
-    mine: [shuffledMoves[0], shuffledMoves[1]],
-    theirs: [shuffledMoves[2], shuffledMoves[3]],
-    middle: shuffledMoves[4],
-  };
+function connectTo(peerId, metadata, setConn) {
+  if (Conn !== null) {
+    return;
+  }
 
-  const conn = peer.connect(peerId, {
-    metadata: {rolls, moves},
-  });
+  const conn = Peer.connect(peerId, {metadata});
   conn.on('open', () => initConn(conn, true, setConn));
 }
 
-export let send2Conn = () => console.error('NO CONNECTION YET');
+export function send2Conn(data) {
+  if (Conn === null) {
+    console.error('No connection');
+    return;
+  }
+
+  Conn.send(data);
+}

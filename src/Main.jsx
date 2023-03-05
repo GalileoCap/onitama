@@ -23,8 +23,8 @@ export default function Main() {
               <Route path='play' element={<Play />} />
               { /* <Route path='config' element={<Config />} /> TODO: Game config*/ }
               <Route path='about' element={<GameAbout />} />
+              <Route path='join/:peerId' element={<Join />} />
             </Route>
-            <Route path=':game/join/:peerId' element={<Join />} />
 
             <Route path='config' element={<Config />} />
             <Route path='about' element={<About />} />

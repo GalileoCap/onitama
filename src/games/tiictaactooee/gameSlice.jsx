@@ -20,6 +20,12 @@ function performMove({ cell }, state) {
   state.turn = (state.turn + 1) % 2;
 }
 
+export function getMetadata() { //TODO: 
+  const rolls = {mine: Math.random(), theirs: Math.random()};
+
+  return {rolls};
+}
+
 export const gameSlice = createSlice({
   name: 'game2',
   initialState: {
