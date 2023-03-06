@@ -15,12 +15,12 @@ export function Join() {
 
   return (
     <div id="Join">
-      Joining game...
+      Joining game... { /* TODO: Animation */ }
     </div>
   );
 }
 
 /*
  * TODO:
- *  - Warn on errors/reject
+ *  - Warn on errors/reject/timeout
  */

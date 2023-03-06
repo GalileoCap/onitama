@@ -7,18 +7,15 @@ export function GameHome() {
     <div id='GameHome'>
       <h1>{game}</h1>
       
-      <li>
-        <Link to='play'>Play</Link>
-      </li>
-      <li>
-        <Link to='about'>Rules & About</Link>
-      </li>
-      <li>
-        <Link to='config'>Config</Link>
-      </li>
-      <li>
-        <Link to='/'>Back</Link>
-      </li>
+      <nav> { /* TODO: Pagination */ }
+        <ul>
+          <li><Link to='play'>Play</Link></li>
+          { /* TODO: Config */ }
+          { /* TODO: Rules */ }
+          { /* TODO: About */ }
+          <li><Link to='/'>Back</Link></li>
+        </ul>
+      </nav>
     </div>
   );
 }

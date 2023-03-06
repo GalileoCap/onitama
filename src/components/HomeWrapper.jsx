@@ -1,13 +1,11 @@
 import { Outlet } from 'react-router-dom';
 
-export function Layout() {
+export function HomeWrapper() {
   return (
-    <div id='Layout'>
+    <div id='HomeWrapper'>
+      <h1>GaliGames</h1>
+
       <Outlet />
     </div>
   );
 }
-
-/*
- * TODO:
- */

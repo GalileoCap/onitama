@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Outlet, useParams } from 'react-router-dom';
+import { PeerProvider } from '../../peer';
 
 import {
   initGame as OnitamaInitGame,
@@ -26,7 +27,7 @@ import {
 function getContext(game) {
   const context = {
     game,
-    success: true
+    fail: false,
   };
 
   switch (game) {
@@ -53,7 +54,7 @@ function getContext(game) {
     break;
 
   default:
-    context.success = false;
+    context.fail = true;
   };
 
   return context;
@@ -63,7 +64,7 @@ export let gameMsg = () => {};
 
 export function GameWrapper() {
   const { game } = useParams();
-  const [ context, setContext ] = useState({success: false});
+  const [ context, setContext ] = useState({fail: true});
   useEffect(() => {
     const newContext = getContext(game);
     setContext(newContext);
@@ -73,9 +74,13 @@ export function GameWrapper() {
   return (
     <>
       {
-        context.success
-        ? <Outlet context={context} />
-        : 'No such game' /* TODO: NoGame page */
+        context.fail
+        ? 'No such game' /* TODO: NoGame page */
+        : (
+          <PeerProvider>
+            <Outlet context={context} />
+          </PeerProvider>
+        )
       }
     </>
   );
