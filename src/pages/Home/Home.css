@@ -1,0 +1,30 @@
+#GamesList {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.GameCard {
+  text-align: center;
+  cursor: pointer;
+  border-radius: 0.8rem;
+  background-color: lightgrey;
+}
+
+.GameCard .card-title {
+  font-weight: bold;
+  margin-bottom: 0.3rem;
+}
+
+.GameCard .card-text {
+  margin-top: 0;
+  margin-bottom: 0.3rem;
+}
+
+.GameCard .card-actions {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  gap: 0.3rem; /* TODO: Align correctly based on size */
+}
