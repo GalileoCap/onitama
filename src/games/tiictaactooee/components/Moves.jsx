@@ -12,7 +12,7 @@ export function Theirs() {
 }
 
 export function Extra() {
-  const turn = useSelector((state) => state.game2.turn);
+  const turn = useSelector((state) => state.TTT.turn);
   //TODO: Timer
   return <div>{turn === MINE ? 'Your turn' : 'Their turn'}</div>
 }

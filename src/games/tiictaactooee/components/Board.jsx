@@ -37,7 +37,7 @@ export function BoardCell({ state, row, col }) {
 }
 
 export function Board({ parentRef }) {
-  const board = useSelector((state) => state.game2.board);
+  const board = useSelector((state) => state.TTT.board);
 
   const [ length, setLength ] = useState(100);
   useEffect(() => { //TODO: Repeated code

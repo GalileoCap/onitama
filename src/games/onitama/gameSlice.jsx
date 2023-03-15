@@ -101,7 +101,7 @@ export function gameMsg(data) {
 }
 
 export const gameSlice = createSlice({
-  name: 'game',
+  name: 'Onitama',
   initialState: {
     turn: undefined,
     cell: undefined,

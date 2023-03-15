@@ -32,7 +32,7 @@ export function gameMsg(data) {
 }
 
 export const gameSlice = createSlice({
-  name: 'game2',
+  name: 'TTT',
   initialState: {
     turn: undefined,
     board: [

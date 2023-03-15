@@ -36,7 +36,7 @@ export function BoardCell({ state, row, col }) {
 }
 
 export function Board({ parentRef }) {
-  const board = useSelector((state) => state.game.board);
+  const board = useSelector((state) => state.Onitama.board);
 
   const [ length, setLength ] = useState(100);
   useEffect(() => {

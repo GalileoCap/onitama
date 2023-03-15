@@ -6,8 +6,11 @@ import { utilsReducer } from './utils';
 
 export default configureStore({
   reducer: {
-    game: OnitamaReducer,
-    game2: TTTReducer,
+    // Games
+    Onitama: OnitamaReducer,
+    TTT: TTTReducer,
+
+    // Misc
     chat: chatReducer,
     utils: utilsReducer,
   },

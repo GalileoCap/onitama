@@ -69,18 +69,18 @@ export function Moves({ moves, whose }) {
 }
 
 export function Mine() {
-  const moves = useSelector((state) => state.game.moves.mine);
+  const moves = useSelector((state) => state.Onitama.moves.mine);
   return <Moves moves={moves} whose={MINE} />;
 }
 
 export function Theirs() {
-  const moves = useSelector((state) => state.game.moves.theirs);
+  const moves = useSelector((state) => state.Onitama.moves.theirs);
   return <Moves moves={moves} whose={THEIRS} />;
 }
 
 export function Extra() {
-  const move = useSelector((state) => state.game.moves.middle);
-  const turn = useSelector((state) => state.game.turn);
+  const move = useSelector((state) => state.Onitama.moves.middle);
+  const turn = useSelector((state) => state.Onitama.turn);
 
   return (
     <div>
